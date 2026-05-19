@@ -6,8 +6,6 @@ export const NIGERIAN_STATES = [
   "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
 ];
 
-export const ACTIVE_STATES = ["Lagos", "FCT (Abuja)", "Rivers", "Kano", "Enugu"];
-
 export const VENDOR_CATEGORIES = [
   "Installer", 
   "Inverter Dealer", 

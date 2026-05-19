@@ -1,10 +1,10 @@
 import { useListVendors, useGetVendorStats, getListVendorsQueryKey, getGetVendorStatsQueryKey } from "@workspace/api-client-react";
 import { VendorCard } from "@/components/vendor-card";
-import { ACTIVE_STATES, NIGERIAN_STATES, VENDOR_CATEGORIES } from "@/lib/constants";
+import { NIGERIAN_STATES, VENDOR_CATEGORIES } from "@/lib/constants";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, Grid2X2, Settings2, SlidersHorizontal, ArrowRight } from "lucide-react";
+import { Search, MapPin, Grid2X2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -65,9 +65,7 @@ export default function DirectoryPage() {
                   <SelectContent>
                     <SelectItem value="all">All States</SelectItem>
                     {NIGERIAN_STATES.map(s => (
-                      <SelectItem key={s} value={s} disabled={!ACTIVE_STATES.includes(s)}>
-                        {s} {!ACTIVE_STATES.includes(s) && "(Soon)"}
-                      </SelectItem>
+                      <SelectItem key={s} value={s}>{s}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -134,7 +132,7 @@ export default function DirectoryPage() {
 
             <div>
               <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" /> Active States
+                <MapPin className="h-4 w-4 text-primary" /> States
               </h3>
               <div className="space-y-2">
                 <div 
@@ -143,7 +141,7 @@ export default function DirectoryPage() {
                 >
                   All States
                 </div>
-                {ACTIVE_STATES.map(st => (
+                {NIGERIAN_STATES.map(st => (
                   <div 
                     key={st}
                     className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors flex justify-between items-center ${state === st ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted text-muted-foreground'}`}

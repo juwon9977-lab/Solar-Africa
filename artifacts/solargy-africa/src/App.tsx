@@ -9,6 +9,7 @@ import BlogPostPage from "@/pages/blog-post";
 import SavedPage from "@/pages/saved";
 import SubmitPage from "@/pages/submit";
 import AdminPage from "@/pages/admin";
+import VendorDetailPage from "@/pages/vendor-detail";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -17,6 +18,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={DirectoryPage} />
+      <Route path="/vendor/:id" component={VendorDetailPage} />
       <Route path="/blog" component={BlogPage} />
       <Route path="/blog/:slug" component={BlogPostPage} />
       <Route path="/saved" component={SavedPage} />
