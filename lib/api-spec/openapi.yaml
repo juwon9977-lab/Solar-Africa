@@ -3,20 +3,27 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Solargy Africa API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: vendors
+    description: Solar vendor operations
+  - name: reviews
+    description: Vendor review operations
+  - name: blog
+    description: Blog post operations
+  - name: admin
+    description: Admin operations
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +31,361 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /vendors:
+    get:
+      operationId: listVendors
+      tags: [vendors]
+      summary: List vendors with optional filters
+      parameters:
+        - name: state
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+        - name: verified
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of vendors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Vendor"
+    post:
+      operationId: createVendor
+      tags: [vendors]
+      summary: Submit a new vendor listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VendorInput"
+      responses:
+        "201":
+          description: Vendor created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vendor"
+
+  /vendors/stats:
+    get:
+      operationId: getVendorStats
+      tags: [vendors]
+      summary: Get summary stats for the directory
+      responses:
+        "200":
+          description: Directory stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendorStats"
+
+  /vendors/{id}:
+    get:
+      operationId: getVendor
+      tags: [vendors]
+      summary: Get a single vendor by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Vendor detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vendor"
+        "404":
+          description: Not found
+
+  /vendors/{id}/reviews:
+    get:
+      operationId: getVendorReviews
+      tags: [reviews]
+      summary: Get reviews for a vendor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+    post:
+      operationId: createReview
+      tags: [reviews]
+      summary: Submit a review for a vendor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewInput"
+      responses:
+        "201":
+          description: Review created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+
+  /admin/vendors/{id}/verify:
+    patch:
+      operationId: adminVerifyVendor
+      tags: [admin]
+      summary: Toggle vendor verified status (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: x-admin-key
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Vendor updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vendor"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+
+  /admin/vendors/{id}/feature:
+    patch:
+      operationId: adminFeatureVendor
+      tags: [admin]
+      summary: Toggle vendor featured status (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: x-admin-key
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Vendor updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vendor"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+
+  /admin/vendors/{id}:
+    delete:
+      operationId: adminDeleteVendor
+      tags: [admin]
+      summary: Delete a vendor listing (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: x-admin-key
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+
+  /admin/login:
+    post:
+      operationId: adminLogin
+      tags: [admin]
+      summary: Validate admin key and return session token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminLoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminLoginResult"
+        "401":
+          description: Invalid key
+
+  /blog:
+    get:
+      operationId: listBlogPosts
+      tags: [blog]
+      summary: List published blog posts
+      parameters:
+        - name: tag
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogPost"
+    post:
+      operationId: createBlogPost
+      tags: [blog]
+      summary: Create a new blog post (admin only)
+      parameters:
+        - name: x-admin-key
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogPostInput"
+      responses:
+        "201":
+          description: Blog post created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "401":
+          description: Unauthorized
+
+  /blog/{slug}:
+    get:
+      operationId: getBlogPost
+      tags: [blog]
+      summary: Get a single blog post by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Blog post detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "404":
+          description: Not found
+
+  /blog/id/{id}:
+    delete:
+      operationId: deleteBlogPost
+      tags: [blog]
+      summary: Delete a blog post (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: x-admin-key
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+    patch:
+      operationId: updateBlogPost
+      tags: [blog]
+      summary: Update a blog post (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: x-admin-key
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogPostInput"
+      responses:
+        "200":
+          description: Updated blog post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +393,183 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    Vendor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        category:
+          type: string
+        state:
+          type: string
+        city:
+          type: string
+        phone:
+          type: string
+        whatsapp:
+          type: string
+        services:
+          type: string
+        description:
+          type: string
+        logo:
+          type: string
+        verified:
+          type: boolean
+        featured:
+          type: boolean
+        rating:
+          type: ["number", "null"]
+        reviewCount:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, name, category, state, city, phone, whatsapp, services, description, logo, verified, featured, reviewCount, createdAt]
+
+    VendorInput:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        state:
+          type: string
+        city:
+          type: string
+        phone:
+          type: string
+        whatsapp:
+          type: string
+        services:
+          type: string
+        description:
+          type: string
+      required: [name, category, state, city, phone, whatsapp, services, description]
+
+    VendorStats:
+      type: object
+      properties:
+        totalVendors:
+          type: integer
+        verifiedVendors:
+          type: integer
+        statesCovered:
+          type: integer
+        totalReviews:
+          type: integer
+        categoryCounts:
+          type: array
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+              count:
+                type: integer
+            required: [category, count]
+        stateCounts:
+          type: array
+          items:
+            type: object
+            properties:
+              state:
+                type: string
+              count:
+                type: integer
+            required: [state, count]
+      required: [totalVendors, verifiedVendors, statesCovered, totalReviews, categoryCounts, stateCounts]
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        vendorId:
+          type: integer
+        reviewerName:
+          type: string
+        rating:
+          type: integer
+        comment:
+          type: string
+        createdAt:
+          type: string
+      required: [id, vendorId, reviewerName, rating, comment, createdAt]
+
+    ReviewInput:
+      type: object
+      properties:
+        reviewerName:
+          type: string
+        rating:
+          type: integer
+        comment:
+          type: string
+      required: [reviewerName, rating, comment]
+
+    BlogPost:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        excerpt:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        publishedAt:
+          type: string
+        readMinutes:
+          type: integer
+      required: [id, title, slug, excerpt, content, author, tags, publishedAt, readMinutes]
+
+    BlogPostInput:
+      type: object
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+        excerpt:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        readMinutes:
+          type: integer
+      required: [title, slug, excerpt, content, author, tags, readMinutes]
+
+    AdminLoginInput:
+      type: object
+      properties:
+        key:
+          type: string
+      required: [key]
+
+    AdminLoginResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+      required: [success, token]
