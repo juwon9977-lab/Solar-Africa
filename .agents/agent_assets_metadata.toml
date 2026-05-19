@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "UJBFwpZWN9LHKAm_k_jKx"
+uri = "file://solargy_africa_frontend_all.txt"
+type = "text"
+title = "Solargy Africa — All Frontend Code"
