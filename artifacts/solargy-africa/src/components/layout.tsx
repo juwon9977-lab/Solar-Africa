@@ -111,8 +111,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div>
             <h3 className="font-semibold mb-4 text-foreground">Legal</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="cursor-not-allowed">Terms of Service</li>
-              <li className="cursor-not-allowed">Privacy Policy</li>
+              <li><Link href="/terms" className="hover:text-primary">Terms of Service</Link></li>
+              <li><Link href="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
               <li><Link href="/admin" className="hover:text-primary">Admin Access</Link></li>
             </ul>
           </div>

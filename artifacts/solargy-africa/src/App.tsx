@@ -10,6 +10,8 @@ import SavedPage from "@/pages/saved";
 import SubmitPage from "@/pages/submit";
 import AdminPage from "@/pages/admin";
 import VendorDetailPage from "@/pages/vendor-detail";
+import TermsPage from "@/pages/terms";
+import PrivacyPage from "@/pages/privacy";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -24,6 +26,8 @@ function Router() {
       <Route path="/saved" component={SavedPage} />
       <Route path="/submit" component={SubmitPage} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/terms" component={TermsPage} />
+      <Route path="/privacy" component={PrivacyPage} />
       <Route component={NotFound} />
     </Switch>
   );
