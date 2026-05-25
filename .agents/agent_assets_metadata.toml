@@ -18,3 +18,9 @@ id = "3kHgPcfbNi-eh4sdxdb8k"
 uri = "file://solargy_africa_source.tar.gz"
 type = "unspecified"
 title = "Solargy Africa — Full Source Code (76K)"
+
+[[outputs]]
+id = "wfg4RlWxb5kU1bIvUMYcI"
+uri = "file://solargy_africa_export.tar.gz"
+type = "unspecified"
+title = "Solargy Africa — Complete Source Export (72K)"
