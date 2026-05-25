@@ -12,3 +12,9 @@ id = "pmisQsiAy8104IhW2jsPV"
 uri = "file://solargy_africa_project.tar.gz"
 type = "unspecified"
 title = "Solargy Africa — Full Project Code"
+
+[[outputs]]
+id = "3kHgPcfbNi-eh4sdxdb8k"
+uri = "file://solargy_africa_source.tar.gz"
+type = "unspecified"
+title = "Solargy Africa — Full Source Code (76K)"
