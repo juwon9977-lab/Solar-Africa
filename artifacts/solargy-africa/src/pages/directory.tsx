@@ -1,7 +1,7 @@
 import { useListVendors, useGetVendorStats, getListVendorsQueryKey, getGetVendorStatsQueryKey } from "@workspace/api-client-react";
 import { VendorCard } from "@/components/vendor-card";
 import { NIGERIAN_STATES, VENDOR_CATEGORIES } from "@/lib/constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, MapPin, Grid2X2 } from "lucide-react";
@@ -11,10 +11,41 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 
+const HERO_SLIDES = [
+  {
+    url: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1920&q=80",
+    caption: "Solar panels powering Nigerian homes",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=1920&q=80",
+    caption: "Large-scale solar energy farms",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=1920&q=80",
+    caption: "Professional solar installation teams",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80",
+    caption: "Rooftop solar for homes and businesses",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=1920&q=80",
+    caption: "Clean energy across Africa",
+  },
+];
+
 export default function DirectoryPage() {
   const [search, setSearch] = useState("");
   const [state, setState] = useState<string>("all");
   const [category, setCategory] = useState<string>("all");
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const queryParams = {
     ...(search ? { q: search } : {}),
@@ -33,9 +64,38 @@ export default function DirectoryPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-secondary text-secondary-foreground relative overflow-hidden py-16 md:py-24">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent" />
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="text-secondary-foreground relative overflow-hidden py-16 md:py-24 min-h-[520px] flex items-center">
+        {/* Carousel background slides */}
+        {HERO_SLIDES.map((slide, i) => (
+          <div
+            key={slide.url}
+            className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+            style={{
+              backgroundImage: `url(${slide.url})`,
+              opacity: i === activeSlide ? 1 : 0,
+            }}
+            aria-hidden="true"
+          />
+        ))}
+        {/* Dark overlay for text legibility */}
+        <div className="absolute inset-0 bg-[#0a1628]/75" />
+        {/* Amber gradient accent */}
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent" />
+
+        <div className="container mx-auto px-4 relative z-10 w-full">
+          {/* Slide indicator dots */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            {HERO_SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveSlide(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === activeSlide ? "w-6 bg-primary" : "w-2 bg-white/40 hover:bg-white/60"
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
           <div className="max-w-3xl">
             <Badge variant="outline" className="mb-6 border-primary/30 text-primary bg-primary/10">Nigeria's #1 Solar Directory</Badge>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-white">
