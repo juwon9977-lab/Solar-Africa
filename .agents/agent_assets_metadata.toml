@@ -30,3 +30,9 @@ id = "9R-_xuLBuMCX7QRYQh0bU"
 uri = "file://solargy_all_source.txt"
 type = "text"
 title = "Solargy Africa — All Source Code (copy-friendly)"
+
+[[outputs]]
+id = "s-uEQqE-9p-08epQd_K3h"
+uri = "file://solargy_africa.zip"
+type = "unspecified"
+title = "Solargy Africa — Full Source Code (.zip)"
