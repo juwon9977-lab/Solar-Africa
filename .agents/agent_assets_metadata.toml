@@ -36,3 +36,9 @@ id = "s-uEQqE-9p-08epQd_K3h"
 uri = "file://solargy_africa.zip"
 type = "unspecified"
 title = "Solargy Africa — Full Source Code (.zip)"
+
+[[outputs]]
+id = "IBbe2S9cDmnofq84td8Sw"
+uri = "file://solargy_africa_website.zip"
+type = "unspecified"
+title = "Solargy Africa — Compiled Website (HTML + JS + CSS)"
