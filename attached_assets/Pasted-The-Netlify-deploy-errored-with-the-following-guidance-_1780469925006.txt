@@ -1,0 +1,141 @@
+The Netlify deploy errored, with the following guidance provided:
+
+Diagnosis
+- Relevant log lines: [line 50](#L50) shows the bundler error "Could not resolve 'pg'"; [line 51](#L51) points to the require in netlify/functions/api.js; and [line 60](#L60) explains the root cause: the function is using "pg" but that dependency was not installed. The bundler (esbuild) fails because it cannot find the "pg" package in node_modules ([line 70](#L70)).
+
+Cause
+- Your Netlify Function requires the "pg" package, but "pg" is not installed where Netlify expects it. Netlify does not automatically install dependencies declared inside a function folder unless configured, so esbuild cannot resolve the import.
+
+Solution
+Choose one of these fixes (recommended: Option A).
+
+Option A — Install "pg" at the project root (recommended)
+1. Verify you have a root package.json committed to the repo.
+2. From your project root run:
+```bash
+npm install pg --save
+# or
+yarn add pg
+```
+3. Commit package.json and the lockfile (package-lock.json or yarn.lock) and push.
+4. Re-deploy on Netlify.
+
+Why: Installing at the top-level ensures Netlify will install the dependency and esbuild can resolve "pg" when bundling functions.
+
+Option B — If you intentionally keep a package.json inside netlify/functions
+1. Verify netlify/functions/package.json exists and lists "pg" in dependencies.
+2. Either:
+   - Add the plugin so Netlify will install dependencies inside the functions folder. In netlify.toml:
+```toml
+[[plugins]]
+package = "@netlify/plugin-functions-install-core"
+```
+   - Or run npm install in that folder as part of your build command (e.g., prepend: cd netlify/functions && npm install && cd -).
+
+3. Commit any changes and re-deploy.
+
+Note: Before using this option, make sure netlify/functions/package.json is committed and contains "pg".
+
+Option C — Mark "pg" as external (only if you understand runtime implications)
+1. Verify "pg" is present in package.json and node_modules will be available at runtime (commit package.json and lockfile).
+2. Tell Netlify's bundler not to bundle "pg" by adding to netlify.toml:
+```toml
+[functions]
+external_node_modules = ["pg"]
+```
+3. Commit and re-deploy.
+
+Important: Only mark "pg" as external if you ensure the module will be available to the function at runtime (i.e., it is installed in the deployed environment). If not, esbuild will avoid bundling but the function will still fail at runtime.
+
+Extra troubleshooting
+- If you still see the same error, confirm the function file path is netlify/functions/api.js and that you pushed all changes.
+- The logs show Node v22.22.3 is used; if you need a different Node version, follow Netlify docs for changing Node versions: https://docs.netlify.com/configure-builds/manage-dependencies/#node-js-and-javascript
+
+Summary: Most straightforward fix is to add "pg" to your root package.json (npm install pg --save), commit the files, and redeploy.
+
+The relevant error logs are:
+
+Line 0: build-image version: ac6eb13fbf000e5c09ad677efd8b7c3c2d0142b6 (noble-new-builds)
+Line 1: buildbot version: a44e54fe94c5559e300982215c93234532143c69
+Line 2: Fetching cached dependencies
+Line 3: Failed to fetch cache, continuing with build
+Line 4: Fetching build zip file
+Line 5: Starting to prepare the repo for build
+Line 6: Custom functions path detected. Proceeding with the specified path: 'netlify/functions'
+Line 7: Installing dependencies
+Line 8: mise ~/.config/mise/config.toml tools: python@3.14.3
+Line 9: mise ~/.config/mise/config.toml tools: ruby@3.4.8
+Line 10: mise ~/.config/mise/config.toml tools: go@1.26.2
+Line 11: Downloading and installing node v22.22.3...
+Line 12: Downloading https://nodejs.org/dist/v22.22.3/node-v22.22.3-linux-x64.tar.xz...
+Line 13: Computing checksum with sha256sum
+Line 14: Checksums matched!
+Line 15: Now using node v22.22.3 (npm v10.9.8)
+Line 16: Enabling Node.js Corepack
+Line 17: Successfully installed dependencies
+Line 18: Detected 0 framework(s)
+Line 19: Starting build script
+Line 20: Section completed: initializing
+Line 21: Failed during stage 'building site': Build script returned non-zero exit code: 2
+Line 22: ​
+Line 23: Netlify Build                                                 
+Line 24: ────────────────────────────────────────────────────────────────
+Line 25: ​
+Line 26: ❯ Version
+Line 27:   @netlify/build 35.14.0
+Line 28: ​
+Line 29: ❯ Flags
+Line 30:   accountId: 6a1f6d1483b86f4e68478ae9
+Line 31:   baseRelDir: true
+Line 40: ​
+Line 41: ❯ Context
+Line 42:   production
+Line 43: ​
+Line 44: Functions bundling                                            
+Line 45: ────────────────────────────────────────────────────────────────
+Line 46: ​
+Line 47: Packaging Functions from netlify/functions directory:
+Line 48:  - api.js
+Line 49: ​
+Line 50: ✘ [ERROR] Could not resolve "pg"
+Line 51:     netlify/functions/api.js:5:25:
+Line 52:       5 │ const { Pool } = require("pg");
+Line 53:         ╵                          ~~~~
+Line 54:   You can mark the path "pg" as external to exclude it from the bundle, which will remove this error and leave the unresolved pa
+Line 55: ​
+Line 56: Dependencies installation error                               
+Line 57: ────────────────────────────────────────────────────────────────
+Line 58: ​
+Line 59:   Error message
+Line 60:   A Netlify Function is using "pg" but that dependency has not been installed yet.
+Line 61: ​
+Line 62:   By default, dependencies inside a Netlify Function's "package.json" are not automatically installed.
+  There are several ways 
+Line 63:     - Removing your Function's "package.json" and adding the dependencies to the project's top-level "package.json" instead. Thi
+Line 64:     - Running "npm install" or "yarn" inside your Netlify Function in your build command.
+Line 65:     - Adding the following plugin to your "netlify.toml":
+Line 66: ​
+Line 67:   [[plugins]]
+Line 68:   package = "@netlify/plugin-functions-install-core"
+Line 69: ​​
+Line 70:   Build failed with 1 error:
+Line 71:   netlify/functions/api.js:5:25: ERROR: Could not resolve "pg"
+Line 72: ​
+Line 73:   Resolved config
+Line 74:   build:
+Line 75:     publish: /opt/build/repo
+Line 76:     publishOrigin: config
+Line 77:   functions:
+Line 78:     "*":
+Line 79:       node_bundler: esbuild
+Line 80:   functionsDirectory: /opt/build/repo/netlify/functions
+Line 81:   headers:
+Line 82:     - for: /assets/*
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+    - for: /*
+      values:
+      
+Line 83: Build failed due to a user error: Build script returned non-zero exit code: 2
+Line 84: Failing build: Failed to build site
+Line 85: Finished processing build request in 9.796s
