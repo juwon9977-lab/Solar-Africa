@@ -1,0 +1,41 @@
+1. Asset filename case mismatch — site will not load on Netlify
+index.html references the JS and CSS bundles with mixed-case filenames:
+
+/assets/index-DuKenlAz.js
+/assets/index-DO3R-l3d.css
+The actual files on disk are all-lowercase:
+
+assets/index-dukenlaz.js
+assets/index-do3r-l3d.css
+Netlify runs on Linux, where the filesystem is case-sensitive. These files will return 404 on every page load, meaning the application will render as a blank white page. The filenames in index.html must exactly match the filenames on disk.
+
+High Severity
+2. _redirects.txt has the wrong filename extension
+The repository contains _redirects.txt, but Netlify only recognises a file named exactly _redirects (no extension). As a result, the SPA catch-all redirect rule (/* /index.html 200) is never applied. Any direct navigation to a client-side route (e.g., /vendors/123) will return a 404 from Netlify's CDN instead of serving the app shell.
+
+The file should be renamed to _redirects.
+
+3. No backend / API layer present
+how_to_use.txt states that "the live vendor data comes from the backend API" and that a separate Express server with PostgreSQL must be deployed for the directory to be functional. No such backend exists in this repository. Without it, the application's data-driven features (vendor listings, search, etc.) will not work. A Netlify Functions-based API backed by Netlify Database (managed Postgres) would be the appropriate solution for this hosting environment.
+
+Medium Severity
+4. Placeholder meta descriptions left in place
+All meta description tags still contain the Replit-generated default text:
+
+"Solargy Africa — built on Replit. Update this description to reflect the app."
+
+This text appears in <meta name="description">, <meta property="og:description">, and <meta name="twitter:description">. It will appear in Google search result snippets and when the URL is shared on social media, which is unprofessional and potentially harmful to SEO and brand perception.
+
+5. OpenGraph image not wired up
+An opengraph.jpg file exists in the repository root but is not referenced anywhere in index.html. There is no <meta property="og:image"> or <meta name="twitter:image"> tag. Consequently, social media link previews will have no image, even though one was clearly intended.
+
+Low Severity
+6. how_to_use.txt is publicly accessible
+This file is a deployment guide intended for the site owner. It is currently served at /how_to_use.txt for anyone to read, and it discloses internal infrastructure details (Express, PostgreSQL, the fact that vendor data comes from a separate backend). It should be removed from the repository or explicitly blocked in _redirects / netlify.toml before going to production.
+
+7. No netlify.toml configuration file
+The repository has no netlify.toml. While Netlify can auto-detect plain static sites, adding one makes the deployment configuration explicit and portable — particularly useful for setting the publish directory, custom headers (e.g., cache-control for hashed assets), and security headers.
+
+8. Minimal favicon
+The favicon.svg is a solid orange square with no logo mark or detail. While functional, it provides no meaningful brand identity in browser tabs.
+

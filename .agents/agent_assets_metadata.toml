@@ -42,3 +42,9 @@ id = "IBbe2S9cDmnofq84td8Sw"
 uri = "file://solargy_africa_website.zip"
 type = "unspecified"
 title = "Solargy Africa — Compiled Website (HTML + JS + CSS)"
+
+[[outputs]]
+id = "ehKpb9zqGs7VtGKD3iSOK"
+uri = "file://solargy_africa_netlify.zip"
+type = "unspecified"
+title = "Solargy Africa — Netlify-Ready (233KB)"
