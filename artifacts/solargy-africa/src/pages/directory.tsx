@@ -82,34 +82,48 @@ export default function DirectoryPage() {
         {/* Amber gradient accent */}
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent" />
 
-        <div className="container mx-auto px-4 relative z-10 w-full">
+        <div className="container mx-auto px-4 relative z-10 w-full pb-10">
           {/* Slide indicator dots */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
             {HERO_SLIDES.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActiveSlide(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === activeSlide ? "w-6 bg-primary" : "w-2 bg-white/40 hover:bg-white/60"
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === activeSlide ? "w-8 bg-primary" : "w-2 bg-white/40 hover:bg-white/60"
                 }`}
                 aria-label={`Go to slide ${i + 1}`}
               />
             ))}
           </div>
-          <div className="max-w-3xl">
-            <Badge variant="outline" className="mb-6 border-primary/30 text-primary bg-primary/10">Nigeria's #1 Solar Directory</Badge>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-white">
-              Find trusted solar professionals in Nigeria.
+
+          <div className="max-w-4xl">
+            {/* Live badge */}
+            <div className="flex items-center gap-2 mb-6">
+              <span className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/30 text-primary text-xs font-semibold">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                Nigeria's #1 Solar Directory
+              </span>
+            </div>
+
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white leading-[1.1]">
+              Find trusted<br />
+              <span className="text-primary">solar professionals</span><br />
+              in Nigeria.
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl leading-relaxed">
-              We connect homes and businesses with verified installers, panel dealers, and solar experts across the country.
+            <p className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl leading-relaxed">
+              We connect homes and businesses with verified installers, panel dealers, and solar experts across all 37 states.
             </p>
 
-            <div className="bg-background rounded-xl p-2 shadow-xl flex flex-col md:flex-row gap-2 max-w-3xl">
+            {/* Search bar */}
+            <div className="bg-background/95 backdrop-blur rounded-2xl p-2 shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mb-8">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input 
-                  placeholder="Search by name, service..." 
+                <Search className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+                <Input
+                  placeholder="Search by name, service, or keyword..."
                   className="h-12 pl-10 border-0 bg-transparent text-foreground shadow-none focus-visible:ring-0"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -117,7 +131,7 @@ export default function DirectoryPage() {
               </div>
               <div className="hidden md:block w-px bg-border my-2" />
               <div className="relative flex-1">
-                <MapPin className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                 <Select value={state} onValueChange={setState}>
                   <SelectTrigger className="h-12 pl-10 border-0 bg-transparent text-foreground shadow-none focus:ring-0">
                     <SelectValue placeholder="All States" />
@@ -130,27 +144,31 @@ export default function DirectoryPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button className="h-12 px-8 text-base shrink-0">Search</Button>
+              <Button className="h-12 px-8 text-base shrink-0 rounded-xl">Explore Directory</Button>
             </div>
 
+            {/* CTA row */}
+            <div className="flex items-center gap-4 mb-10">
+              <Button variant="outline" className="border-white/20 text-white bg-white/10 hover:bg-white/20 hover:text-white" asChild>
+                <Link href="/submit">List Your Business</Link>
+              </Button>
+              <span className="text-white/40 text-sm">Free to list — verified listings get more calls</span>
+            </div>
+
+            {/* Trust stats */}
             {stats && (
-              <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                <div>
-                  <div className="text-3xl font-bold text-white">{stats.totalVendors}+</div>
-                  <div className="text-sm text-muted-foreground">Listed Vendors</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-white">{stats.verifiedVendors}</div>
-                  <div className="text-sm text-muted-foreground">Verified Experts</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-white">{stats.statesCovered}</div>
-                  <div className="text-sm text-muted-foreground">Active States</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-white">{stats.totalReviews}</div>
-                  <div className="text-sm text-muted-foreground">User Reviews</div>
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {[
+                  { value: `${stats.totalVendors}+`, label: "Listed Vendors" },
+                  { value: stats.verifiedVendors, label: "Verified Experts" },
+                  { value: stats.statesCovered, label: "States Covered" },
+                  { value: stats.totalReviews, label: "Client Reviews" },
+                ].map(({ value, label }) => (
+                  <div key={label} className="border-l-2 border-primary/40 pl-4">
+                    <div className="font-stat text-3xl font-bold text-white">{value}</div>
+                    <div className="text-sm text-white/60 mt-0.5">{label}</div>
+                  </div>
+                ))}
               </div>
             )}
           </div>

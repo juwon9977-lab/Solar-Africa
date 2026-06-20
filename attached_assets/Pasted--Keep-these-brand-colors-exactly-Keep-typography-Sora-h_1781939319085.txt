@@ -1,0 +1,217 @@
+
+Keep these brand colors exactly:
+
+Keep typography:
+- Sora (headings)
+- Inter (body)
+- Space Grotesk (stats)
+
+Your task is to REFACTOR and IMPROVE the UX/UI of the current build.
+
+PRIMARY OBJECTIVE:
+Make the product feel more premium, cleaner, faster, and more trust-driven.
+
+Do not alter core backend logic.
+Do not remove Supabase, Prisma, Cloudinary, or Resend integrations.
+
+UX IMPROVEMENTS REQUIRED:
+
+1. HOMEPAGE IMPROVEMENTS
+
+Refactor hero section:
+
+Improve hierarchy:
+- Bigger headline
+- More breathing space
+- Better visual alignment
+- Stronger CTA hierarchy
+
+Replace CTA labels:
+
+Primary:
+"Explore Directory"
+
+Secondary:
+"List Your Business"
+
+Add:
+- trust badges row
+- verified companies count
+- countries count
+- live activity indicator
+
+Make search UI feel premium:
+- glassmorphism card
+- rounded-xl
+- better spacing
+- sticky on mobile
+
+2. DIRECTORY UX
+
+Improve filtering UX:
+
+Replace stacked filters with:
+- horizontal responsive filter bar
+- sticky top filters
+- instant filtering
+- clear filter button
+
+Improve cards:
+
+Add:
+- verified badge prominence
+- better rating UI
+- projects completed
+- quick contact buttons
+- WhatsApp shortcut
+- hover lift animation
+- better spacing
+
+3. BUSINESS PROFILE PAGE
+
+Improve structure and this is facebook link https://www.facebook.com/share/191fjQCE3C/
+instagram link https://www.instagram.com/solargyafrica?igsh=MXQ0Y2IzcGQ5bDB3dA==
+mail are info@solargyafrica and admin@solargyafrica
+Current sections feel too flat.
+
+Refactor into:
+
+- hero cover
+- logo overlay
+- quick stats bar
+- services cards
+- project gallery masonry
+- sticky right contact card
+- CTA strip
+
+Improve copy labels:
+
+"About" → "Company Overview"
+"Services" → "What They Offer"
+"Reviews" → "Client Feedback"
+
+4. SUBMIT LISTING PAGE
+
+Improve form UX:
+
+- multi-step form
+- progress bar
+- autosave draft
+- upload previews
+- better grouped sections
+- clearer helper text
+
+Section order:
+
+Step 1: Business Info
+Step 2: Services
+Step 3: Media Uploads
+Step 4: Social Links
+Step 5: Review & Submit
+
+5. COPY REFINEMENTS
+
+Replace all weak wording:
+
+"View Profile" → "View Full Profile"
+"Contact" → "Get Quote"
+"Claim" → "Claim Ownership"
+"Featured businesses" → "Trusted Solar Leaders"
+
+6. MOBILE OPTIMIZATION
+
+Improve:
+- navbar spacing
+- sticky bottom CTA
+- filter drawer
+- better tap targets
+- less crowded cards
+- improved form spacing
+
+7. MICROINTERACTIONS
+
+Add:
+- Framer Motion transitions
+- hover scaling
+- staggered card reveals
+- button ripple effect
+- loading skeletons
+
+8. TRUST SYSTEM
+
+Make verification more visible:
+
+Add:
+- verified badge explanation tooltip
+- "Manually reviewed by Solargy Africa"
+- trust banner on profiles
+
+9. FOOTER REFACTOR
+
+Sections:
+
+Company
+Directory
+Countries
+Resources
+Legal
+Newsletter signup
+
+10. KEEP ALL EXISTING FUNCTIONALITY
+
+Must retain:
+- admin dashboard
+- pending listing workflow
+- claim workflow
+- analytics tracking
+- uploads
+- email notifications
+- SEO routes
+
+IMPORTANT:
+Refactor only.
+Improve component structure.
+Improve spacing.
+Improve visual hierarchy.
+Improve responsiveness.
+Keep code clean and production-ready.
+Use this **add-on message** after your original Replit prompt:
+
+Additional update:
+
+Keep the existing Solargy Africa codebase and current brand colors exactly as they are.
+
+Do not redesign the brand. Only improve UX, layout flow, spacing, hierarchy, wording, and responsiveness.
+
+Also refactor the project so it is fully production-ready for deployment on Vercel (primary) and compatible with Netlify.
+
+Important deployment requirements:
+
+* Ensure the project builds successfully with `npm run build`
+* Fix all TypeScript issues
+* Fix all Next.js App Router issues
+* Ensure server and client components are properly separated
+* Add proper environment variable handling
+* Create `.env.example`
+* Configure Prisma for production deployment
+* Add `postinstall` script for Prisma generate
+* Ensure Supabase auth works in production
+* Ensure Cloudinary uploads work in production
+* Ensure Resend email works in production
+* Add proper metadata configuration
+* Add sitemap.xml
+* Add robots.txt
+* Add Open Graph support
+* Add canonical URLs
+* Add image optimization using `next/image`
+* Optimize lazy loading and code splitting
+* Ensure mobile responsiveness across all pages
+* Ensure admin dashboard routes are protected and deploy-safe
+
+Deployment priority:
+
+1. Vercel
+2. Netlify
+
+Final requirement:
+Return the improved codebase fully cleaned, optimized, and deploy-ready without removing any existing functionality.

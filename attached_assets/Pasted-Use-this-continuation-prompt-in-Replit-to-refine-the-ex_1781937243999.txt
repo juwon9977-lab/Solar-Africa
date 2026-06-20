@@ -1,0 +1,213 @@
+Use this **continuation prompt** in Replit to refine the existing Solargy Africa build **without rebuilding from scratch**.
+
+Copy-paste this exactly:
+
+---
+
+```txt
+CONTINUE EXISTING SOLARGY AFRICA PROJECT
+
+Do NOT rebuild from scratch.
+Do NOT change the database schema.
+Do NOT change the existing color palette or brand identity.
+
+Keep these brand colors exactly:
+
+Deep Emerald: #0E3B2E
+Solar Gold: #F4B400
+Off White: #F8F7F2
+Graphite: #121212
+Soft Gray: #8A8A8A
+Energy Blue: #2D9CDB
+
+Keep typography:
+- Sora (headings)
+- Inter (body)
+- Space Grotesk (stats)
+
+Your task is to REFACTOR and IMPROVE the UX/UI of the current build.
+
+PRIMARY OBJECTIVE:
+Make the product feel more premium, cleaner, faster, and more trust-driven.
+
+Do not alter core backend logic.
+Do not remove Supabase, Prisma, Cloudinary, or Resend integrations.
+
+UX IMPROVEMENTS REQUIRED:
+
+1. HOMEPAGE IMPROVEMENTS
+
+Refactor hero section:
+
+Current headline:
+"Powering Africa with Clean Energy. Together."
+
+Change to:
+"Find Trusted Solar Companies Across Africa"
+
+Subtext:
+"Connect with verified installers, suppliers, financiers and solar experts near you."
+
+Improve hierarchy:
+- Bigger headline
+- More breathing space
+- Better visual alignment
+- Stronger CTA hierarchy
+
+Replace CTA labels:
+
+Primary:
+"Explore Directory"
+
+Secondary:
+"List Your Business"
+
+Add:
+- trust badges row
+- verified companies count
+- countries count
+- live activity indicator
+
+Make search UI feel premium:
+- glassmorphism card
+- rounded-xl
+- better spacing
+- sticky on mobile
+
+2. DIRECTORY UX
+
+Improve filtering UX:
+
+Replace stacked filters with:
+- horizontal responsive filter bar
+- sticky top filters
+- instant filtering
+- clear filter button
+
+Improve cards:
+
+Add:
+- verified badge prominence
+- better rating UI
+- projects completed
+- quick contact buttons
+- WhatsApp shortcut
+- hover lift animation
+- better spacing
+
+3. BUSINESS PROFILE PAGE
+
+Improve structure:
+
+Current sections feel too flat.
+
+Refactor into:
+
+- hero cover
+- logo overlay
+- quick stats bar
+- services cards
+- certifications section
+- project gallery masonry
+- sticky right contact card
+- CTA strip
+
+Improve copy labels:
+
+"About" → "Company Overview"
+"Services" → "What They Offer"
+"Reviews" → "Client Feedback"
+
+4. SUBMIT LISTING PAGE
+
+Improve form UX:
+
+- multi-step form
+- progress bar
+- autosave draft
+- upload previews
+- better grouped sections
+- clearer helper text
+
+Section order:
+
+Step 1: Business Info
+Step 2: Services
+Step 3: Media Uploads
+Step 4: Social Links
+Step 5: Review & Submit
+
+5. COPY REFINEMENTS
+
+Replace all weak wording:
+
+"View Profile" → "View Full Profile"
+"Contact" → "Get Quote"
+"Claim" → "Claim Ownership"
+"Featured businesses" → "Trusted Solar Leaders"
+
+6. MOBILE OPTIMIZATION
+
+Improve:
+- navbar spacing
+- sticky bottom CTA
+- filter drawer
+- better tap targets
+- less crowded cards
+- improved form spacing
+
+7. MICROINTERACTIONS
+
+Add:
+- Framer Motion transitions
+- hover scaling
+- staggered card reveals
+- button ripple effect
+- loading skeletons
+
+8. TRUST SYSTEM
+
+Make verification more visible:
+
+Add:
+- verified badge explanation tooltip
+- "Manually reviewed by Solargy Africa"
+- trust banner on profiles
+
+9. FOOTER REFACTOR
+
+Sections:
+
+Company
+Directory
+Countries
+Resources
+Legal
+Newsletter signup
+
+10. KEEP ALL EXISTING FUNCTIONALITY
+
+Must retain:
+- admin dashboard
+- pending listing workflow
+- claim workflow
+- analytics tracking
+- uploads
+- email notifications
+- SEO routes
+
+IMPORTANT:
+Refactor only.
+Improve component structure.
+Improve spacing.
+Improve visual hierarchy.
+Improve responsiveness.
+Keep code clean and production-ready.
+```
+
+---
+
+This tells Replit to **continue the current app**, preserve your brand system, and only improve UX/copy.
+
+**a.** I can also write a **homepage-only redesign prompt** for sharper conversion.
+**b.** I can write a **directory UX optimization prompt** focused on search/filter speed.
