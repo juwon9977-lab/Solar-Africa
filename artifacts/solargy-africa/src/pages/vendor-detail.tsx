@@ -1,5 +1,5 @@
 import { useParams, Link } from "wouter";
-import { useGetVendor, getGetVendorQueryKey, useGetVendorReviews, getGetVendorReviewsQueryKey, useCreateReview } from "@workspace/api-client-react";
+import { useGetVendor, getGetVendorQueryKey, useGetVendorReviews, getGetVendorReviewsQueryKey, useCreateReview } from "@/lib/api-client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

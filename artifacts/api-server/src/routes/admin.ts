@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { eq } from "drizzle-orm";
-import { db, vendorsTable } from "@workspace/db";
+import { db, vendorsTable } from "../lib/db";
 import {
   AdminVerifyVendorParams,
   AdminFeatureVendorParams,
@@ -9,9 +9,9 @@ import {
   AdminLoginResponse,
   AdminVerifyVendorResponse,
   AdminFeatureVendorResponse,
-} from "@workspace/api-zod";
+} from "../lib/api-zod";
 
-const ADMIN_KEY = process.env.ADMIN_SECRET ?? "solargy-admin-2024";
+const ADMIN_KEY = process.env.ADMIN_SECRET ?? "solargy@2014";
 
 function checkAdmin(
   req: { headers: Record<string, string | string[] | undefined> },

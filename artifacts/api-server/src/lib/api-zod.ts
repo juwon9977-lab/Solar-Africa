@@ -1,0 +1,258 @@
+import * as zod from 'zod';
+
+export const HealthCheckResponse = zod.object({
+  "status": zod.string()
+})
+
+export const ListVendorsQueryParams = zod.object({
+  "state": zod.coerce.string().optional(),
+  "category": zod.coerce.string().optional(),
+  "q": zod.coerce.string().optional(),
+  "featured": zod.coerce.boolean().optional(),
+  "verified": zod.coerce.boolean().optional()
+})
+
+export const ListVendorsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "category": zod.string(),
+  "state": zod.string(),
+  "city": zod.string(),
+  "phone": zod.string(),
+  "whatsapp": zod.string(),
+  "services": zod.string(),
+  "description": zod.string(),
+  "logo": zod.string(),
+  "verified": zod.boolean(),
+  "featured": zod.boolean(),
+  "rating": zod.number().nullish(),
+  "reviewCount": zod.number(),
+  "createdAt": zod.string()
+})
+export const ListVendorsResponse = zod.array(ListVendorsResponseItem)
+
+export const CreateVendorBody = zod.object({
+  "name": zod.string(),
+  "category": zod.string(),
+  "state": zod.string(),
+  "city": zod.string(),
+  "phone": zod.string(),
+  "whatsapp": zod.string(),
+  "services": zod.string(),
+  "description": zod.string()
+})
+
+export const GetVendorStatsResponse = zod.object({
+  "totalVendors": zod.number(),
+  "verifiedVendors": zod.number(),
+  "statesCovered": zod.number(),
+  "totalReviews": zod.number(),
+  "categoryCounts": zod.array(zod.object({
+    "category": zod.string(),
+    "count": zod.number()
+  })),
+  "stateCounts": zod.array(zod.object({
+    "state": zod.string(),
+    "count": zod.number()
+  }))
+})
+
+export const GetVendorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetVendorResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "category": zod.string(),
+  "state": zod.string(),
+  "city": zod.string(),
+  "phone": zod.string(),
+  "whatsapp": zod.string(),
+  "services": zod.string(),
+  "description": zod.string(),
+  "logo": zod.string(),
+  "verified": zod.boolean(),
+  "featured": zod.boolean(),
+  "rating": zod.number().nullish(),
+  "reviewCount": zod.number(),
+  "createdAt": zod.string()
+})
+
+export const GetVendorReviewsParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetVendorReviewsResponseItem = zod.object({
+  "id": zod.number(),
+  "vendorId": zod.number(),
+  "reviewerName": zod.string(),
+  "rating": zod.number(),
+  "comment": zod.string(),
+  "createdAt": zod.string()
+})
+export const GetVendorReviewsResponse = zod.array(GetVendorReviewsResponseItem)
+
+export const CreateReviewParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const CreateReviewBody = zod.object({
+  "reviewerName": zod.string(),
+  "rating": zod.number(),
+  "comment": zod.string()
+})
+
+export const AdminVerifyVendorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminVerifyVendorHeader = zod.object({
+  "x-admin-key": zod.string()
+})
+
+export const AdminVerifyVendorResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "category": zod.string(),
+  "state": zod.string(),
+  "city": zod.string(),
+  "phone": zod.string(),
+  "whatsapp": zod.string(),
+  "services": zod.string(),
+  "description": zod.string(),
+  "logo": zod.string(),
+  "verified": zod.boolean(),
+  "featured": zod.boolean(),
+  "rating": zod.number().nullish(),
+  "reviewCount": zod.number(),
+  "createdAt": zod.string()
+})
+
+export const AdminFeatureVendorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminFeatureVendorHeader = zod.object({
+  "x-admin-key": zod.string()
+})
+
+export const AdminFeatureVendorResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "category": zod.string(),
+  "state": zod.string(),
+  "city": zod.string(),
+  "phone": zod.string(),
+  "whatsapp": zod.string(),
+  "services": zod.string(),
+  "description": zod.string(),
+  "logo": zod.string(),
+  "verified": zod.boolean(),
+  "featured": zod.boolean(),
+  "rating": zod.number().nullish(),
+  "reviewCount": zod.number(),
+  "createdAt": zod.string()
+})
+
+export const AdminDeleteVendorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeleteVendorHeader = zod.object({
+  "x-admin-key": zod.string()
+})
+
+export const AdminLoginBody = zod.object({
+  "key": zod.string()
+})
+
+export const AdminLoginResponse = zod.object({
+  "success": zod.boolean(),
+  "token": zod.string()
+})
+
+export const ListBlogPostsQueryParams = zod.object({
+  "tag": zod.coerce.string().optional()
+})
+
+export const ListBlogPostsResponseItem = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "slug": zod.string(),
+  "excerpt": zod.string(),
+  "content": zod.string(),
+  "author": zod.string(),
+  "tags": zod.array(zod.string()),
+  "publishedAt": zod.string(),
+  "readMinutes": zod.number()
+})
+export const ListBlogPostsResponse = zod.array(ListBlogPostsResponseItem)
+
+export const CreateBlogPostHeader = zod.object({
+  "x-admin-key": zod.string()
+})
+
+export const CreateBlogPostBody = zod.object({
+  "title": zod.string(),
+  "slug": zod.string(),
+  "excerpt": zod.string(),
+  "content": zod.string(),
+  "author": zod.string(),
+  "tags": zod.array(zod.string()),
+  "readMinutes": zod.number()
+})
+
+export const GetBlogPostParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const GetBlogPostResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "slug": zod.string(),
+  "excerpt": zod.string(),
+  "content": zod.string(),
+  "author": zod.string(),
+  "tags": zod.array(zod.string()),
+  "publishedAt": zod.string(),
+  "readMinutes": zod.number()
+})
+
+export const DeleteBlogPostParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteBlogPostHeader = zod.object({
+  "x-admin-key": zod.string()
+})
+
+export const UpdateBlogPostParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateBlogPostHeader = zod.object({
+  "x-admin-key": zod.string()
+})
+
+export const UpdateBlogPostBody = zod.object({
+  "title": zod.string(),
+  "slug": zod.string(),
+  "excerpt": zod.string(),
+  "content": zod.string(),
+  "author": zod.string(),
+  "tags": zod.array(zod.string()),
+  "readMinutes": zod.number()
+})
+
+export const UpdateBlogPostResponse = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "slug": zod.string(),
+  "excerpt": zod.string(),
+  "content": zod.string(),
+  "author": zod.string(),
+  "tags": zod.array(zod.string()),
+  "publishedAt": zod.string(),
+  "readMinutes": zod.number()
+})

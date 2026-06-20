@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateVendor } from "@workspace/api-client-react";
+import { useCreateVendor } from "@/lib/api-client";
 import { NIGERIAN_STATES, VENDOR_CATEGORIES } from "@/lib/constants";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";

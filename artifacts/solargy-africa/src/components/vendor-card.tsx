@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Bookmark, BookmarkCheck, CheckCircle2, MapPin, MessageCircle, Phone, Star } from "lucide-react";
 import { useSavedVendors } from "@/lib/saved";
-import { Vendor } from "@workspace/api-client-react/src/generated/api.schemas";
+import { Vendor } from "@/lib/api-client/generated/api.schemas";
 import { Link } from "wouter";
 
 export function VendorCard({ vendor }: { vendor: Vendor }) {

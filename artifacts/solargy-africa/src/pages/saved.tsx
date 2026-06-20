@@ -1,5 +1,5 @@
 import { useSavedVendors } from "@/lib/saved";
-import { useListVendors, getListVendorsQueryKey } from "@workspace/api-client-react";
+import { useListVendors, getListVendorsQueryKey } from "@/lib/api-client";
 import { VendorCard } from "@/components/vendor-card";
 import { Bookmark, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";

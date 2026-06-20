@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAdminLogin, useListVendors, useAdminVerifyVendor, useAdminFeatureVendor, useAdminDeleteVendor, useListBlogPosts, useCreateBlogPost, useDeleteBlogPost, useUpdateBlogPost, getListVendorsQueryKey, getListBlogPostsQueryKey } from "@workspace/api-client-react";
+import { useAdminLogin, useListVendors, useAdminVerifyVendor, useAdminFeatureVendor, useAdminDeleteVendor, useListBlogPosts, useCreateBlogPost, useDeleteBlogPost, useUpdateBlogPost, getListVendorsQueryKey, getListBlogPostsQueryKey } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";

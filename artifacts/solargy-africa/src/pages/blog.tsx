@@ -1,4 +1,4 @@
-import { useListBlogPosts, getListBlogPostsQueryKey } from "@workspace/api-client-react";
+import { useListBlogPosts, getListBlogPostsQueryKey } from "@/lib/api-client";
 import { Link } from "wouter";
 import { format } from "date-fns";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";

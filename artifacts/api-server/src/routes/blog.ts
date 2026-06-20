@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
-import { eq } from "drizzle-orm";
-import { db, blogPostsTable } from "@workspace/db";
+import { eq, sql } from "drizzle-orm";
+import { db, blogPostsTable } from "../lib/db";
 import {
   ListBlogPostsQueryParams,
   ListBlogPostsResponse,
@@ -10,10 +10,9 @@ import {
   UpdateBlogPostBody,
   UpdateBlogPostParams,
   DeleteBlogPostParams,
-} from "@workspace/api-zod";
-import { sql } from "drizzle-orm";
+} from "../lib/api-zod";
 
-const ADMIN_KEY = process.env.ADMIN_SECRET ?? "solargy-admin-2024";
+const ADMIN_KEY = process.env.ADMIN_SECRET ?? "solargy@2014";
 
 function checkAdmin(req: { headers: Record<string, string | string[] | undefined> }, res: { status: (code: number) => { json: (body: unknown) => void } }): boolean {
   const key = req.headers["x-admin-key"];

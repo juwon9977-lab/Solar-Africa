@@ -1,4 +1,4 @@
-import { useGetBlogPost, getGetBlogPostQueryKey } from "@workspace/api-client-react";
+import { useGetBlogPost, getGetBlogPostQueryKey } from "@/lib/api-client";
 import { useParams, Link } from "wouter";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";

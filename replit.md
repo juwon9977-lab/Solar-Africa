@@ -10,7 +10,7 @@ Nigeria's premier solar vendor directory — connecting homes and businesses wit
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL` — Postgres connection string
-- Required env: `ADMIN_SECRET` — admin panel access key (default: `solargy-admin-2024`)
+- Required env: `ADMIN_SECRET` — admin panel access key (default: `solargy@2014`)
 
 ## Stack
 
@@ -50,7 +50,7 @@ Nigeria's premier solar vendor directory — connecting homes and businesses wit
 
 - No emojis in the UI
 - All 37 Nigerian states available in listings
-- Admin key stored in `ADMIN_SECRET` env var (not hardcoded in production)
+- Admin key stored in `ADMIN_SECRET` env var (default: `solargy@2014`, change in production)
 
 ## Gotchas
 

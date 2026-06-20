@@ -1,4 +1,4 @@
-import { useListVendors, useGetVendorStats, getListVendorsQueryKey, getGetVendorStatsQueryKey } from "@workspace/api-client-react";
+import { useListVendors, useGetVendorStats, getListVendorsQueryKey, getGetVendorStatsQueryKey } from "@/lib/api-client";
 import { VendorCard } from "@/components/vendor-card";
 import { NIGERIAN_STATES, VENDOR_CATEGORIES } from "@/lib/constants";
 import { useState, useEffect } from "react";
