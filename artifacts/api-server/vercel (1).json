@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "buildCommand": "node build.mjs",
+  "installCommand": "npm install -g pnpm && pnpm install --no-frozen-lockfile",
+  "builds": [
+    {
+      "src": "src/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/index.ts"
+    }
+  ]
+}
