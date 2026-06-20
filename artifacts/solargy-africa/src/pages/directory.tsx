@@ -105,17 +105,18 @@ export default function DirectoryPage() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                Nigeria's #1 Solar Directory
+                Africa's Solar Directory — Now Live in Nigeria
               </span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white leading-[1.1]">
               Find trusted<br />
               <span className="text-primary">solar professionals</span><br />
-              in Nigeria.
+              across Africa.
             </h1>
             <p className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl leading-relaxed">
-              We connect homes and businesses with verified installers, panel dealers, and solar experts across all 37 states.
+              We connect homes and businesses with verified solar installers, panel dealers, and energy experts.
+              Currently listing across all 37 Nigerian states — more African countries coming soon.
             </p>
 
             {/* Search bar */}
@@ -134,10 +135,10 @@ export default function DirectoryPage() {
                 <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                 <Select value={state} onValueChange={setState}>
                   <SelectTrigger className="h-12 pl-10 border-0 bg-transparent text-foreground shadow-none focus:ring-0">
-                    <SelectValue placeholder="All States" />
+                    <SelectValue placeholder="All Nigerian States" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All States</SelectItem>
+                    <SelectItem value="all">All Nigerian States</SelectItem>
                     {NIGERIAN_STATES.map(s => (
                       <SelectItem key={s} value={s}>{s}</SelectItem>
                     ))}
@@ -152,7 +153,7 @@ export default function DirectoryPage() {
               <Button variant="outline" className="border-white/20 text-white bg-white/10 hover:bg-white/20 hover:text-white" asChild>
                 <Link href="/submit">List Your Business</Link>
               </Button>
-              <span className="text-white/40 text-sm">Free to list — verified listings get more calls</span>
+              <span className="text-white/40 text-sm">Free to list in Nigeria — more African countries launching soon</span>
             </div>
 
             {/* Trust stats */}
@@ -161,7 +162,7 @@ export default function DirectoryPage() {
                 {[
                   { value: `${stats.totalVendors}+`, label: "Listed Vendors" },
                   { value: stats.verifiedVendors, label: "Verified Experts" },
-                  { value: stats.statesCovered, label: "States Covered" },
+                  { value: stats.statesCovered, label: "Nigerian States" },
                   { value: stats.totalReviews, label: "Client Reviews" },
                 ].map(({ value, label }) => (
                   <div key={label} className="border-l-2 border-primary/40 pl-4">
@@ -209,15 +210,16 @@ export default function DirectoryPage() {
             </div>
 
             <div>
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" /> States
+              <h3 className="font-semibold mb-1 flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" /> Location
               </h3>
+              <p className="text-xs text-muted-foreground mb-3">Nigeria — more countries coming soon</p>
               <div className="space-y-2">
                 <div 
                   className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${state === 'all' ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted text-muted-foreground'}`}
                   onClick={() => setState('all')}
                 >
-                  All States
+                  All Nigerian States
                 </div>
                 {NIGERIAN_STATES.map(st => (
                   <div 
@@ -239,7 +241,7 @@ export default function DirectoryPage() {
             <Card className="bg-primary/5 border-primary/20">
               <CardContent className="p-4">
                 <h4 className="font-semibold mb-2 text-sm">Are you a vendor?</h4>
-                <p className="text-xs text-muted-foreground mb-4">Get listed in Nigeria's largest solar directory and reach thousands of buyers.</p>
+                <p className="text-xs text-muted-foreground mb-4">Get listed in Africa's growing solar directory and reach thousands of buyers across Nigeria and beyond.</p>
                 <Button variant="outline" className="w-full text-xs" asChild>
                   <Link href="/submit">Submit Listing</Link>
                 </Button>

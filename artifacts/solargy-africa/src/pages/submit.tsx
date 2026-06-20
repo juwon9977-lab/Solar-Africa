@@ -91,7 +91,7 @@ export default function SubmitPage() {
           <h1 className="text-3xl font-bold tracking-tight">Add Your Business</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Join Nigeria's premier solar directory and connect with thousands of buyers looking for reliable solar solutions.
+          Join Africa's solar directory and connect with thousands of buyers across Nigeria looking for reliable solar solutions.
         </p>
       </div>
 
@@ -144,11 +144,11 @@ export default function SubmitPage() {
                 name="state"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>State</FormLabel>
+                    <FormLabel>Nigerian State</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a state" />
+                          <SelectValue placeholder="Select your state (Nigeria)" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
