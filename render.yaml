@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: solar-africa-api
+    runtime: node
+    rootDir: artifacts/api-server
+    buildCommand: npm install -g pnpm && pnpm install --no-frozen-lockfile && node ./build.mjs
+    startCommand: node --enable-source-maps ./dist/index.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        value: solargy-admin-2024
+      - key: PORT
+        value: 3000
+
+  - type: web
+    name: solargy-africa-frontend
+    runtime: static
+    rootDir: artifacts/solargy-africa
+    buildCommand: npm install -g pnpm && pnpm install --no-frozen-lockfile && pnpm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://solar-africa.onrender.com
