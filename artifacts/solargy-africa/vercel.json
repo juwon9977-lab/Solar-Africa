@@ -1,8 +1,12 @@
 {
   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://solar-africa.onrender.com/api/:path*"
-    }
+    { "source": "/api/:path*", "destination": "https://solar-africa.onrender.com/api/:path*" },
+    { "source": "/vendors/:path*", "destination": "https://solar-africa.onrender.com/vendors/:path*" },
+    { "source": "/vendors", "destination": "https://solar-africa.onrender.com/vendors" },
+    { "source": "/blog/:path*", "destination": "https://solar-africa.onrender.com/blog/:path*" },
+    { "source": "/blog", "destination": "https://solar-africa.onrender.com/blog" },
+    { "source": "/admin/:path*", "destination": "https://solar-africa.onrender.com/admin/:path*" },
+    { "source": "/reviews/:path*", "destination": "https://solar-africa.onrender.com/reviews/:path*" }
   ]
 }
+
