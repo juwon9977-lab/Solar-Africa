@@ -1,12 +1,25 @@
 import { useState, useEffect } from "react";
-import { useAdminLogin, useListVendors, useAdminVerifyVendor, useAdminFeatureVendor, useAdminDeleteVendor, useListBlogPosts, useCreateBlogPost, useDeleteBlogPost, useUpdateBlogPost, getListVendorsQueryKey, getListBlogPostsQueryKey } from "@/lib/api-client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useAdminLogin,
+  useListVendors,
+  useListBlogPosts,
+  getListVendorsQueryKey,
+  getListBlogPostsQueryKey,
+  adminVerifyVendor,
+  adminFeatureVendor,
+  adminDeleteVendor,
+  createBlogPost,
+  updateBlogPost,
+  deleteBlogPost,
+} from "@/lib/api-client";
+import type { BlogPostInput } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { ShieldCheck, CheckCircle2, Star, Trash2, KeyRound } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -116,13 +129,31 @@ function VendorManager({ adminKey }: { adminKey: string }) {
   const { toast } = useToast();
   const { data: vendors, isLoading } = useListVendors({});
 
-  const authHeaders = { headers: { "x-admin-key": adminKey } };
+  const adminHeaders = {
+    "Content-Type": "application/json",
+    "x-admin-key": adminKey,
+  };
 
-  const verifyMut = useAdminVerifyVendor({ request: authHeaders });
-  const featureMut = useAdminFeatureVendor({ request: authHeaders });
-  const deleteMut = useAdminDeleteVendor({ request: authHeaders });
+  const verifyMut = useMutation({
+    mutationFn: ({ id }: { id: number }) =>
+      adminVerifyVendor(id, { headers: adminHeaders }),
+  });
 
-  const handleAction = (mutation: any, id: number, actionName: string) => {
+  const featureMut = useMutation({
+    mutationFn: ({ id }: { id: number }) =>
+      adminFeatureVendor(id, { headers: adminHeaders }),
+  });
+
+  const deleteMut = useMutation({
+    mutationFn: ({ id }: { id: number }) =>
+      adminDeleteVendor(id, { headers: adminHeaders }),
+  });
+
+  const handleAction = (
+    mutation: typeof verifyMut | typeof featureMut | typeof deleteMut,
+    id: number,
+    actionName: string,
+  ) => {
     mutation.mutate({ id }, {
       onSuccess: () => {
         toast({ title: `Vendor ${actionName} successfully` });
@@ -130,7 +161,7 @@ function VendorManager({ adminKey }: { adminKey: string }) {
       },
       onError: () => {
         toast({ title: `Error: ${actionName} failed`, variant: "destructive" });
-      }
+      },
     });
   };
 
@@ -172,6 +203,7 @@ function VendorManager({ adminKey }: { adminKey: string }) {
                     variant={vendor.verified ? "outline" : "default"}
                     size="sm"
                     onClick={() => handleAction(verifyMut, vendor.id, "verify toggled")}
+                    disabled={verifyMut.isPending}
                   >
                     <CheckCircle2 className="h-4 w-4" />
                   </Button>
@@ -179,6 +211,7 @@ function VendorManager({ adminKey }: { adminKey: string }) {
                     variant={vendor.featured ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleAction(featureMut, vendor.id, "feature toggled")}
+                    disabled={featureMut.isPending}
                   >
                     <Star className="h-4 w-4" />
                   </Button>
@@ -186,6 +219,7 @@ function VendorManager({ adminKey }: { adminKey: string }) {
                     variant="destructive"
                     size="sm"
                     onClick={() => handleAction(deleteMut, vendor.id, "deleted")}
+                    disabled={deleteMut.isPending}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -206,7 +240,7 @@ const blogSchema = z.object({
   content: z.string().min(50),
   author: z.string().min(2),
   tags: z.string().min(2),
-  readMinutes: z.coerce.number().min(1)
+  readMinutes: z.coerce.number().min(1),
 });
 
 function BlogManager({ adminKey }: { adminKey: string }) {
@@ -215,23 +249,37 @@ function BlogManager({ adminKey }: { adminKey: string }) {
   const { data: posts, isLoading } = useListBlogPosts({});
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
 
-  const authHeaders = { headers: { "x-admin-key": adminKey } };
+  const adminHeaders = {
+    "Content-Type": "application/json",
+    "x-admin-key": adminKey,
+  };
 
-  const deleteMut = useDeleteBlogPost({ request: authHeaders });
-  const createMut = useCreateBlogPost({ request: authHeaders });
-  const updateMut = useUpdateBlogPost({ request: authHeaders });
+  const createMut = useMutation({
+    mutationFn: ({ data }: { data: BlogPostInput }) =>
+      createBlogPost(data, { headers: adminHeaders }),
+  });
+
+  const updateMut = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: BlogPostInput }) =>
+      updateBlogPost(id, data, { headers: adminHeaders }),
+  });
+
+  const deleteMut = useMutation({
+    mutationFn: ({ id }: { id: number }) =>
+      deleteBlogPost(id, { headers: adminHeaders }),
+  });
 
   const form = useForm<z.infer<typeof blogSchema>>({
     resolver: zodResolver(blogSchema),
     defaultValues: {
-      title: "", slug: "", excerpt: "", content: "", author: "Admin", tags: "", readMinutes: 5
-    }
+      title: "", slug: "", excerpt: "", content: "", author: "Admin", tags: "", readMinutes: 5,
+    },
   });
 
   const onSubmit = (values: z.infer<typeof blogSchema>) => {
     const data = {
       ...values,
-      tags: values.tags.split(",").map(t => t.trim())
+      tags: values.tags.split(",").map(t => t.trim()),
     };
 
     if (editingPostId) {
@@ -244,7 +292,7 @@ function BlogManager({ adminKey }: { adminKey: string }) {
         },
         onError: () => {
           toast({ title: "Failed to update post", variant: "destructive" });
-        }
+        },
       });
     } else {
       createMut.mutate({ data }, {
@@ -255,7 +303,7 @@ function BlogManager({ adminKey }: { adminKey: string }) {
         },
         onError: () => {
           toast({ title: "Failed to create post", variant: "destructive" });
-        }
+        },
       });
     }
   };
@@ -269,7 +317,7 @@ function BlogManager({ adminKey }: { adminKey: string }) {
       content: post.content,
       author: post.author,
       tags: post.tags.join(", "),
-      readMinutes: post.readMinutes
+      readMinutes: post.readMinutes,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -287,7 +335,7 @@ function BlogManager({ adminKey }: { adminKey: string }) {
       },
       onError: () => {
         toast({ title: "Failed to delete post", variant: "destructive" });
-      }
+      },
     });
   };
 
@@ -351,7 +399,7 @@ function BlogManager({ adminKey }: { adminKey: string }) {
                     <Button variant="outline" size="sm" onClick={() => handleEdit(post)}>
                       Edit
                     </Button>
-                    <Button variant="destructive" size="sm" onClick={() => handleDelete(post.id)}>
+                    <Button variant="destructive" size="sm" onClick={() => handleDelete(post.id)} disabled={deleteMut.isPending}>
                       Delete
                     </Button>
                   </div>
