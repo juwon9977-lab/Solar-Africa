@@ -22,7 +22,7 @@ export default function AdminPage() {
   const [adminKey, setAdminKey] = useState<string | null>(null);
   const [loginKey, setLoginKey] = useState("");
   const { toast } = useToast();
-  
+
   const loginMutation = useAdminLogin();
 
   useEffect(() => {
@@ -35,8 +35,8 @@ export default function AdminPage() {
     loginMutation.mutate({ data: { key: loginKey } }, {
       onSuccess: (data) => {
         if (data.success) {
-          localStorage.setItem(ADMIN_KEY_STORAGE, loginKey);
-          setAdminKey(loginKey);
+          localStorage.setItem(ADMIN_KEY_STORAGE, data.token);
+          setAdminKey(data.token);
           toast({ title: "Login successful" });
         } else {
           toast({ title: "Invalid admin key", variant: "destructive" });
@@ -66,9 +66,9 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
-              <Input 
-                type="password" 
-                placeholder="Admin Key" 
+              <Input
+                type="password"
+                placeholder="Admin Key"
                 value={loginKey}
                 onChange={(e) => setLoginKey(e.target.value)}
                 className="h-12"
@@ -115,20 +115,21 @@ function VendorManager({ adminKey }: { adminKey: string }) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: vendors, isLoading } = useListVendors({});
-  
-  const verifyMut = useAdminVerifyVendor();
-  const featureMut = useAdminFeatureVendor();
-  const deleteMut = useAdminDeleteVendor();
+
+  const authHeaders = { headers: { "x-admin-key": adminKey } };
+
+  const verifyMut = useAdminVerifyVendor({ request: authHeaders });
+  const featureMut = useAdminFeatureVendor({ request: authHeaders });
+  const deleteMut = useAdminDeleteVendor({ request: authHeaders });
 
   const handleAction = (mutation: any, id: number, actionName: string) => {
     mutation.mutate({ id }, {
-      headers: { 'x-admin-key': adminKey },
       onSuccess: () => {
         toast({ title: `Vendor ${actionName} successfully` });
         queryClient.invalidateQueries({ queryKey: getListVendorsQueryKey() });
       },
       onError: () => {
-        toast({ title: `Error ${actionName} vendor`, variant: "destructive" });
+        toast({ title: `Error: ${actionName} failed`, variant: "destructive" });
       }
     });
   };
@@ -167,21 +168,21 @@ function VendorManager({ adminKey }: { adminKey: string }) {
                   </div>
                 </TableCell>
                 <TableCell className="text-right space-x-2">
-                  <Button 
+                  <Button
                     variant={vendor.verified ? "outline" : "default"}
                     size="sm"
-                    onClick={() => handleAction(verifyMut, vendor.id, "verified status changed")}
+                    onClick={() => handleAction(verifyMut, vendor.id, "verify toggled")}
                   >
                     <CheckCircle2 className="h-4 w-4" />
                   </Button>
-                  <Button 
+                  <Button
                     variant={vendor.featured ? "default" : "outline"}
                     size="sm"
-                    onClick={() => handleAction(featureMut, vendor.id, "featured status changed")}
+                    onClick={() => handleAction(featureMut, vendor.id, "feature toggled")}
                   >
                     <Star className="h-4 w-4" />
                   </Button>
-                  <Button 
+                  <Button
                     variant="destructive"
                     size="sm"
                     onClick={() => handleAction(deleteMut, vendor.id, "deleted")}
@@ -212,10 +213,13 @@ function BlogManager({ adminKey }: { adminKey: string }) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: posts, isLoading } = useListBlogPosts({});
-  const deleteMut = useDeleteBlogPost();
-  const createMut = useCreateBlogPost();
-  const updateMut = useUpdateBlogPost();
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
+
+  const authHeaders = { headers: { "x-admin-key": adminKey } };
+
+  const deleteMut = useDeleteBlogPost({ request: authHeaders });
+  const createMut = useCreateBlogPost({ request: authHeaders });
+  const updateMut = useUpdateBlogPost({ request: authHeaders });
 
   const form = useForm<z.infer<typeof blogSchema>>({
     resolver: zodResolver(blogSchema),
@@ -229,10 +233,9 @@ function BlogManager({ adminKey }: { adminKey: string }) {
       ...values,
       tags: values.tags.split(",").map(t => t.trim())
     };
-    
+
     if (editingPostId) {
       updateMut.mutate({ id: editingPostId, data }, {
-        headers: { 'x-admin-key': adminKey },
         onSuccess: () => {
           toast({ title: "Post updated successfully" });
           queryClient.invalidateQueries({ queryKey: getListBlogPostsQueryKey() });
@@ -245,7 +248,6 @@ function BlogManager({ adminKey }: { adminKey: string }) {
       });
     } else {
       createMut.mutate({ data }, {
-        headers: { 'x-admin-key': adminKey },
         onSuccess: () => {
           toast({ title: "Post created successfully" });
           queryClient.invalidateQueries({ queryKey: getListBlogPostsQueryKey() });
@@ -269,13 +271,12 @@ function BlogManager({ adminKey }: { adminKey: string }) {
       tags: post.tags.join(", "),
       readMinutes: post.readMinutes
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDelete = (id: number) => {
-    if(!confirm("Delete this post?")) return;
+    if (!confirm("Delete this post?")) return;
     deleteMut.mutate({ id }, {
-      headers: { 'x-admin-key': adminKey },
       onSuccess: () => {
         toast({ title: "Post deleted" });
         queryClient.invalidateQueries({ queryKey: getListBlogPostsQueryKey() });
@@ -283,6 +284,9 @@ function BlogManager({ adminKey }: { adminKey: string }) {
           setEditingPostId(null);
           form.reset();
         }
+      },
+      onError: () => {
+        toast({ title: "Failed to delete post", variant: "destructive" });
       }
     });
   };
@@ -301,26 +305,26 @@ function BlogManager({ adminKey }: { adminKey: string }) {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField control={form.control} name="title" render={({field}) => (
-                <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field}/></FormControl></FormItem>
+              <FormField control={form.control} name="title" render={({ field }) => (
+                <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
               )} />
-              <FormField control={form.control} name="slug" render={({field}) => (
-                <FormItem><FormLabel>Slug</FormLabel><FormControl><Input {...field}/></FormControl></FormItem>
+              <FormField control={form.control} name="slug" render={({ field }) => (
+                <FormItem><FormLabel>Slug</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
               )} />
-              <FormField control={form.control} name="author" render={({field}) => (
-                <FormItem><FormLabel>Author</FormLabel><FormControl><Input {...field}/></FormControl></FormItem>
+              <FormField control={form.control} name="author" render={({ field }) => (
+                <FormItem><FormLabel>Author</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
               )} />
-              <FormField control={form.control} name="readMinutes" render={({field}) => (
-                <FormItem><FormLabel>Read Time (mins)</FormLabel><FormControl><Input type="number" {...field}/></FormControl></FormItem>
+              <FormField control={form.control} name="readMinutes" render={({ field }) => (
+                <FormItem><FormLabel>Read Time (mins)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
-              <FormField control={form.control} name="tags" render={({field}) => (
-                <FormItem><FormLabel>Tags (comma separated)</FormLabel><FormControl><Input {...field}/></FormControl></FormItem>
+              <FormField control={form.control} name="tags" render={({ field }) => (
+                <FormItem><FormLabel>Tags (comma separated)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
               )} />
-              <FormField control={form.control} name="excerpt" render={({field}) => (
-                <FormItem><FormLabel>Excerpt</FormLabel><FormControl><Textarea {...field}/></FormControl></FormItem>
+              <FormField control={form.control} name="excerpt" render={({ field }) => (
+                <FormItem><FormLabel>Excerpt</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
               )} />
-              <FormField control={form.control} name="content" render={({field}) => (
-                <FormItem><FormLabel>Content (HTML/Text)</FormLabel><FormControl><Textarea className="min-h-[200px]" {...field}/></FormControl></FormItem>
+              <FormField control={form.control} name="content" render={({ field }) => (
+                <FormItem><FormLabel>Content (HTML/Text)</FormLabel><FormControl><Textarea className="min-h-[200px]" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
               <Button type="submit" disabled={createMut.isPending || updateMut.isPending} className="w-full">
                 {editingPostId ? "Update Post" : "Create Post"}
@@ -341,7 +345,7 @@ function BlogManager({ adminKey }: { adminKey: string }) {
                 <div key={post.id} className="flex items-center justify-between p-4 border rounded-lg">
                   <div>
                     <h4 className="font-semibold">{post.title}</h4>
-                    <p className="text-sm text-muted-foreground">{format(new Date(post.publishedAt), 'MMM d, yyyy')}</p>
+                    <p className="text-sm text-muted-foreground">{format(new Date(post.publishedAt), "MMM d, yyyy")}</p>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={() => handleEdit(post)}>

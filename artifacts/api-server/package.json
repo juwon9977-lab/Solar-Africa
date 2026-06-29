@@ -12,6 +12,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "drizzle-zod": "^0.7.0",
     "express": "^5.2.1",
