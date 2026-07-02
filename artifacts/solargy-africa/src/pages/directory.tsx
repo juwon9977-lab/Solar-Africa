@@ -4,7 +4,7 @@ import { NIGERIAN_STATES, VENDOR_CATEGORIES } from "@/lib/constants";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, Grid2X2 } from "lucide-react";
+import { Search, MapPin, Grid2X2, SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,6 +39,7 @@ export default function DirectoryPage() {
   const [state, setState] = useState<string>("all");
   const [category, setCategory] = useState<string>("all");
   const [activeSlide, setActiveSlide] = useState(0);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -178,83 +179,22 @@ export default function DirectoryPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row gap-8">
-          
-          {/* Sidebar Filters */}
-          <aside className="w-full md:w-64 shrink-0 space-y-8">
-            <div>
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <Grid2X2 className="h-4 w-4 text-primary" /> Categories
-              </h3>
-              <div className="space-y-2">
-                <div 
-                  className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${category === 'all' ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted text-muted-foreground'}`}
-                  onClick={() => setCategory('all')}
-                >
-                  All Categories
-                </div>
-                {VENDOR_CATEGORIES.map(cat => (
-                  <div 
-                    key={cat}
-                    className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors flex justify-between items-center ${category === cat ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted text-muted-foreground'}`}
-                    onClick={() => setCategory(cat)}
-                  >
-                    <span>{cat}</span>
-                    {stats?.categoryCounts.find(c => c.category === cat)?.count ? (
-                      <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-foreground/70">
-                        {stats.categoryCounts.find(c => c.category === cat)?.count}
-                      </span>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            </div>
 
-            <div>
-              <h3 className="font-semibold mb-1 flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" /> Location
-              </h3>
-              <p className="text-xs text-muted-foreground mb-3">Nigeria — more countries coming soon</p>
-              <div className="space-y-2">
-                <div 
-                  className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${state === 'all' ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted text-muted-foreground'}`}
-                  onClick={() => setState('all')}
-                >
-                  All Nigerian States
-                </div>
-                {NIGERIAN_STATES.map(st => (
-                  <div 
-                    key={st}
-                    className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors flex justify-between items-center ${state === st ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-muted text-muted-foreground'}`}
-                    onClick={() => setState(st)}
-                  >
-                    <span>{st}</span>
-                    {stats?.stateCounts.find(c => c.state === st)?.count ? (
-                      <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-foreground/70">
-                        {stats.stateCounts.find(c => c.state === st)?.count}
-                      </span>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <Card className="bg-primary/5 border-primary/20">
-              <CardContent className="p-4">
-                <h4 className="font-semibold mb-2 text-sm">Are you a vendor?</h4>
-                <p className="text-xs text-muted-foreground mb-4">Get listed in Africa's growing solar directory and reach thousands of buyers across Nigeria and beyond.</p>
-                <Button variant="outline" className="w-full text-xs" asChild>
-                  <Link href="/submit">Submit Listing</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </aside>
-
-          {/* Main Content */}
-          <div className="flex-1 min-w-0">
+          {/* Main Content — order-1 on mobile (shows first), natural order on desktop */}
+          <div className="flex-1 min-w-0 order-1 md:order-none">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold tracking-tight">
                 {isLoading ? "Loading vendors..." : `${vendors?.length || 0} Vendors Found`}
               </h2>
+              <Button
+                variant="outline"
+                size="sm"
+                className="md:hidden flex items-center gap-2"
+                onClick={() => setFiltersOpen(prev => !prev)}
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                {filtersOpen ? "Hide Filters" : "Filters"}
+              </Button>
             </div>
 
             {isLoading ? (
@@ -282,6 +222,80 @@ export default function DirectoryPage() {
               </div>
             )}
           </div>
+
+          {/* Sidebar Filters — order-2 on mobile (shows after vendors), natural order on desktop */}
+          <aside className={`w-full md:w-64 shrink-0 space-y-8 order-2 md:order-none md:block ${filtersOpen ? "block" : "hidden"}`}>
+            <div>
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <Grid2X2 className="h-4 w-4 text-primary" /> Categories
+              </h3>
+              <div className="space-y-2">
+                <div
+                  className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${category === "all" ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-muted-foreground"}`}
+                  onClick={() => setCategory("all")}
+                >
+                  All Categories
+                </div>
+                {VENDOR_CATEGORIES.map(cat => (
+                  <div
+                    key={cat}
+                    className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors flex justify-between items-center ${category === cat ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-muted-foreground"}`}
+                    onClick={() => setCategory(cat)}
+                  >
+                    <span>{cat}</span>
+                    {stats?.categoryCounts.find(c => c.category === cat)?.count ? (
+                      <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-foreground/70">
+                        {stats.categoryCounts.find(c => c.category === cat)?.count}
+                      </span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-1 flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" /> Location
+              </h3>
+              <div className="mb-3">
+                <p className="text-sm font-medium text-foreground">Africa</p>
+                <p className="text-xs text-muted-foreground">Coming soon</p>
+              </div>
+              <div className="space-y-2">
+                <div
+                  className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${state === "all" ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-muted-foreground"}`}
+                  onClick={() => setState("all")}
+                >
+                  All Nigerian States
+                </div>
+                {NIGERIAN_STATES.map(st => (
+                  <div
+                    key={st}
+                    className={`px-3 py-2 rounded-md cursor-pointer text-sm transition-colors flex justify-between items-center ${state === st ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-muted-foreground"}`}
+                    onClick={() => setState(st)}
+                  >
+                    <span>{st}</span>
+                    {stats?.stateCounts.find(c => c.state === st)?.count ? (
+                      <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-foreground/70">
+                        {stats.stateCounts.find(c => c.state === st)?.count}
+                      </span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Card className="bg-primary/5 border-primary/20">
+              <CardContent className="p-4">
+                <h4 className="font-semibold mb-2 text-sm">Are you a vendor?</h4>
+                <p className="text-xs text-muted-foreground mb-4">Get listed in Africa's growing solar directory and reach thousands of buyers across Nigeria and beyond.</p>
+                <Button variant="outline" className="w-full text-xs" asChild>
+                  <Link href="/submit">Submit Listing</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </aside>
+
         </div>
       </div>
     </div>
